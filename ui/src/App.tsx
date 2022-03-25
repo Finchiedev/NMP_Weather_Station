@@ -32,6 +32,7 @@ class SensorReadings extends React.Component<WeatherData> {
   render(): JSX.Element {
     return (
       <div>
+        <h1>Weather sensor data</h1>
         Ambient temperature: {this.state.ambient_temp}
         <br />
         Track temperature: {this.state.track_temp}
@@ -46,6 +47,50 @@ class SensorReadings extends React.Component<WeatherData> {
         <br />
       </div>
     );
+  }
+}
+
+interface WeatherAPI {
+  clouds?: number;
+  feels_like?: number;
+  humidity?: number;
+  temp?: number;
+}
+
+class WeatherComponent extends React.Component<WeatherAPI> {
+  state: WeatherAPI = {
+    clouds: 0,
+    feels_like: 0,
+    humidity: 0,
+    temp: 0,
+  };
+
+  componentDidMount(): void {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+    
+      const req = await window.fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`);
+      const resp = JSON.parse(await req.text());
+      
+      this.setState(resp.current);
+      console.log(resp.current);
+    });
+  }
+
+  render(): JSX.Element {
+    return(
+      <div>
+        <h1>Weather API data</h1>
+        Clouds: {this.state.clouds}
+        <br />
+        Feels like: {this.state.feels_like}
+        <br />
+        Humidity: {this.state.humidity}
+        <br />
+        Temperature: {this.state.temp}
+      </div>
+    )
   }
 }
 
@@ -71,6 +116,7 @@ function App(): JSX.Element {
       <div>
         <button id='apiToggle' onClick={apiToggle}>Start</button>
       </div>
+      <WeatherComponent />
     </div>
   );
 }

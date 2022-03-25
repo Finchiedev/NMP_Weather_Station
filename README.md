@@ -9,6 +9,11 @@
 - Can start/stop the readings
 
 ## How to use?
+First make sure there is a file `ui/.env` with the contents:
+```
+REACT_APP_WEATHER_API_KEY=key
+```
+
 You will need to start 3 processes. First, `cd` into the following directories:
 ```
 server
