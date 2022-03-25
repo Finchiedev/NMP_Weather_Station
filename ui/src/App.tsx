@@ -49,9 +49,29 @@ class SensorReadings extends React.Component<WeatherData> {
   }
 }
 
+function apiToggle(): void {
+  let button = document.getElementById('apiToggle');
+  if (!button) {
+    return;
+  }
+
+  if (button?.innerHTML == 'Start') {
+    window.fetch('http://localhost:8000/api/start');
+    button.innerHTML = 'Stop';
+  } else {
+    window.fetch('http://localhost:8000/api/stop');
+    button.innerHTML = 'Start';
+  }
+}
+
 function App(): JSX.Element {
   return (
-    <SensorReadings />
+    <div>
+      <SensorReadings />
+      <div>
+        <button id='apiToggle' onClick={apiToggle}>Start</button>
+      </div>
+    </div>
   );
 }
 

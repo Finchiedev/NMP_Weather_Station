@@ -8,7 +8,7 @@ import { generate_weather_data } from '../../emulator/src/weather_output';
 const HOSTNAME = 'localhost';
 const API_PORT = 8000;
 
-let api_enable = true;
+let api_enable = false;
 
 // Generic interface for valid weather data
 // All of these types are optional to include case where sensor reading is invalid
