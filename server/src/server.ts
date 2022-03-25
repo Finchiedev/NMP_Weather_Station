@@ -11,9 +11,17 @@ const LOG_FILE = `/tmp/daq_log_${Date.now()}.txt`
 const HOSTNAME = 'localhost';
 const API_PORT = 8000;
 
-console.log(`All logs will be written to ${LOG_FILE}`);
-
 let api_enable = false;
+
+fs.readdir('/tmp', (_err: any, files: any[]) => {
+  files.forEach(file => {
+    if (file.startsWith('daq_log_')) {
+      console.log(`Log file found for date: ${new Date(parseInt(file.substring(8, file.indexOf('.txt'))))}`);
+    }
+  });
+});
+
+console.log(`All logs for this run will be written to ${LOG_FILE}`);
 
 // Generic interface for valid weather data
 // All of these types are optional to include case where sensor reading is invalid
