@@ -8,6 +8,8 @@ import { generate_weather_data } from '../../emulator/src/weather_output';
 const HOSTNAME = 'localhost';
 const API_PORT = 8000;
 
+let api_enable = true;
+
 // Generic interface for valid weather data
 // All of these types are optional to include case where sensor reading is invalid
 interface WeatherData {
@@ -100,13 +102,11 @@ api.get('/', async (req, res) => {
 });
 
 api.get('/api/start', async (req, res) => {
-  const val = await Promise.resolve('Started streaming weather data');
-  res.send(val);
+  api_enable = true;
 });
 
 api.get('/api/stop', async (req, res) => {
-  const val = await Promise.resolve('Stopped streaming weather data');
-  res.send(val);
+  api_enable = false;
 });
 
 // Error handler
@@ -120,8 +120,10 @@ api.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 const socket = dgram.createSocket('udp4');
 
 async function sendData(): Promise<void> {
-  const data = Buffer.from(JSON.stringify(get_weather_data()));
-  socket.send(data, 0, data.length, 5000, 'localhost', (err) => {});
+  if (api_enable) {
+    const data = Buffer.from(JSON.stringify(get_weather_data()));
+    socket.send(data, 0, data.length, 5000, 'localhost', (err) => {});
+  }
 }
 
 socket.bind(4500);
