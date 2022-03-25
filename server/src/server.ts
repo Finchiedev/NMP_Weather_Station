@@ -21,14 +21,14 @@ interface WeatherData {
 
 function validate_within_range(min: number, max: number, value: number | null | Function) {
   if (typeof value === "function" || value == null || !value) {
-    console.log(`Discarding value due to bad type! Got: ${value}`);
+    console.warn(`Discarding value due to bad type! Got: ${value}`);
     return false;
   }
 
   if (min <= value && value <= max) {
     return true;
   } else {
-    console.log(`Discarding value due to out-of-range! Got: ${value}`);
+    console.warn(`Discarding value due to out-of-range! Got: ${value}`);
     return false;
   }
 }
@@ -118,7 +118,7 @@ api.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 
 // ----------------- Set up a UDP socket -----------------
 const socket = dgram.createSocket('udp4');
-const data = Buffer.from('Some Data');
+const data = Buffer.from(JSON.stringify(get_weather_data()));
 
 async function sendData(): Promise<void> {
   socket.send(data, 0, data.length, 5000, 'localhost', (err) => {});
