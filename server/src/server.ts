@@ -5,8 +5,13 @@ import { Buffer } from 'buffer';
 import HttpError from './httpError';
 import { generate_weather_data } from '../../emulator/src/weather_output';
 
+const fs = require('fs');
+
+const LOG_FILE = `/tmp/daq_log_${Date.now()}.txt`
 const HOSTNAME = 'localhost';
 const API_PORT = 8000;
+
+console.log(`All logs will be written to ${LOG_FILE}`);
 
 let api_enable = false;
 
@@ -120,8 +125,14 @@ api.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 const socket = dgram.createSocket('udp4');
 
 async function sendData(): Promise<void> {
+  const data = Buffer.from(JSON.stringify(get_weather_data()));
+  fs.writeFile(LOG_FILE, `${data}\n`, { flag: 'a+' }, (err: any) => {
+      if (err) {
+        console.error(`Failed to write log file: ${err}`);
+      }
+    });
+
   if (api_enable) {
-    const data = Buffer.from(JSON.stringify(get_weather_data()));
     socket.send(data, 0, data.length, 5000, 'localhost', (err) => {});
   }
 }
