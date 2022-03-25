@@ -118,11 +118,10 @@ api.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 
 // ----------------- Set up a UDP socket -----------------
 const socket = dgram.createSocket('udp4');
-const data = Buffer.from(JSON.stringify(get_weather_data()));
 
 async function sendData(): Promise<void> {
+  const data = Buffer.from(JSON.stringify(get_weather_data()));
   socket.send(data, 0, data.length, 5000, 'localhost', (err) => {});
-  get_weather_data();
 }
 
 socket.bind(4500);
@@ -136,3 +135,5 @@ api.listen(API_PORT, () =>
     `Weather Station API server running at http://${HOSTNAME}:${API_PORT}`,
   ),
 );
+
+export { WeatherData };
