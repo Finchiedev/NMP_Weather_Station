@@ -7,7 +7,7 @@
 - Able to store the last known good value of sensor
 - Displays sensor readings to the screen
 - Can start/stop the readings
-- Display current internet weather data based on 
+- Display current internet weather data based on geolocation
 - Logs sensor data to a temporary file
 - Lists start times of previous accessible logs
 
