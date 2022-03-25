@@ -1,12 +1,27 @@
-import express, { NextFunction, Request, Response } from 'express';
-import cors from 'cors';
+import express from 'express';
 import dgram from 'dgram';
+import * as WebSocket from 'ws';
+import * as http from 'http';
 
-// ----------------- Set up a UDP socket -----------------
+const app = express();
+const httpServer = http.createServer(app);
+
+const wss = new WebSocket.Server({ server: httpServer });
+
+httpServer.listen(5001, () => {
+  console.log(`Server listening on port ${httpServer.address()}`);
+});
+
 const socket = dgram.createSocket('udp4');
-const data = Buffer.from('Some Data');
-
 socket.bind(5000);
+
 socket.on('message', (msg, rinfo) => {
-    console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+  // const data = JSON.parse(msg.toString());
+  console.log(`Forwarding: ${msg} from ${rinfo.address}:${rinfo.port}`);
+
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(msg);
+    }
   });
+});
