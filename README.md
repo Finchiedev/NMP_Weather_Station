@@ -7,6 +7,7 @@
 - Able to store the last known good value of sensor
 - Displays sensor readings to the screen
 - Can start/stop the readings
+- Display current internet weather data based on location
 
 ## How to use?
 First make sure there is a file `ui/.env` with the contents:
